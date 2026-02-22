@@ -1,7 +1,7 @@
 
 # RediSearch
 
-A BM25 and WebCrawler based Search Engine for Reddit (will soon extend support to more Sites too).
+A BM25 and WebCrawler based Search Engine for Reddit.
 
 ---
 
