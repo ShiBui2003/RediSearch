@@ -82,8 +82,8 @@ The critical invariant: **raw data is never modified after insertion**. All down
 - [x] **Phase 5 — API**: FastAPI endpoints, rate limiting, cursor pagination
 - [x] **Phase 6 — Sharding**: shard manager, router, cross-shard merge
 - [x] **Phase 7 — TF-IDF + Vector + Hybrid**: TF-IDF index, FAISS vector index, score fusion
-- [ ] **Phase 8 — Autocomplete**: trie, builder, prefix suggester
-- [ ] **Phase 9 — Background Jobs**: job queue workers, scheduler, index versioning
+- [x] **Phase 8 — Autocomplete**: trie, builder, prefix suggester, API endpoint
+- [x] **Phase 9 — Background Jobs**: worker pool, scheduler, admin API, maintenance
 
 ### Run crawler
 
@@ -109,6 +109,13 @@ python -m redisearch.indexing.cli --subreddit python
 python -m redisearch.search.cli --query "python decorators" --subreddit python
 ```
 
+### Build autocomplete trie
+
+```bash
+python -m redisearch.autocomplete.cli build --subreddit python
+python -m redisearch.autocomplete.cli query "pyth" --top-k 5
+```
+
 ### Start API server
 
 ```bash
@@ -123,3 +130,16 @@ Endpoints:
 | GET | `/health` | Liveness check |
 | GET | `/stats` | Raw/processed counts, subreddit list |
 | GET | `/search?q=...&subreddit=...&page_size=20&cursor=...` | BM25 search with pagination |
+| GET | `/autocomplete?q=...&subreddit=...&top_k=10` | Prefix-based autocomplete suggestions |
+| POST | `/admin/jobs` | Enqueue a background job |
+| GET | `/admin/jobs` | List jobs (filter by status) |
+| GET | `/admin/jobs/{id}` | Get job details |
+| POST | `/admin/jobs/{id}/retry` | Retry a failed job |
+| POST | `/admin/maintenance/recover` | Recover stale running jobs |
+| POST | `/admin/maintenance/cleanup` | Delete old completed jobs |
+
+### Run tests
+
+```bash
+python -m pytest tests/ -v
+```
