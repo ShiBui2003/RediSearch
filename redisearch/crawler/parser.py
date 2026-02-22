@@ -54,14 +54,16 @@ class ListingPageParser:
             author_node = thing.select_one("a.author")
             author = author_node.get_text(strip=True) if author_node else None
 
+            score_node = thing.select_one("div.score")
             score = self._parse_score(
                 thing.get("data-score")
-                or (thing.select_one("div.score") or {}).get("title")
-                or (thing.select_one("div.score") or {}).get_text(strip=True)
+                or (score_node.get("title") if score_node else None)
+                or (score_node.get_text(strip=True) if score_node else None)
             )
 
+            comments_node = thing.select_one("a.comments")
             comment_count = self._parse_comment_count(
-                (thing.select_one("a.comments") or {}).get_text(strip=True)
+                comments_node.get_text(strip=True) if comments_node else None
             )
 
             created_utc = self._parse_created_utc(thing.select_one("time"))
