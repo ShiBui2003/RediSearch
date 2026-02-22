@@ -39,6 +39,20 @@ class StatsResponse(BaseModel):
     active_indexes: int
 
 
+class SuggestionResponse(BaseModel):
+    """A single autocomplete suggestion."""
+
+    term: str
+    score: float
+
+
+class AutocompleteResponse(BaseModel):
+    """Autocomplete results."""
+
+    prefix: str
+    suggestions: list[SuggestionResponse]
+
+
 class ErrorResponse(BaseModel):
     """Standard error envelope."""
 
