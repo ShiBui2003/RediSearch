@@ -1,0 +1,981 @@
+/* ============================================================
+   RediSearch — Light Pastel Theme
+   Matching the Search.me aesthetic with Reddit Snoo animation
+   ============================================================ */
+
+:root {
+    --bg-primary: #eef1f8;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #f4f6fc;
+    --bg-input: #ffffff;
+    --border: #d8dde8;
+    --border-focus: #8b9dd4;
+    --text-primary: #2d3142;
+    --text-secondary: #6b7394;
+    --text-muted: #9ba3be;
+    --accent: #7b8cc4;
+    --accent-hover: #6a7ab8;
+    --accent-glow: rgba(123, 140, 196, 0.15);
+    --green: #5cb85c;
+    --orange: #ff9800;
+    --red: #e74c3c;
+    --reddit-orange: #FF4500;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 16px rgba(120, 130, 180, 0.10);
+    --shadow-lg: 0 8px 40px rgba(120, 130, 180, 0.15);
+    --shadow-search: 0 4px 24px rgba(120, 130, 180, 0.12);
+    --transition: 0.25s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========================
+   NAVBAR
+   ======================== */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200, 210, 230, 0.5);
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-snoo {
+    filter: drop-shadow(0 2px 4px rgba(255, 69, 0, 0.2));
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.logo-accent {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-link {
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.nav-link.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    font-weight: 600;
+}
+
+/* ========================
+   PAGES
+   ======================== */
+.page {
+    display: none;
+    padding-top: 60px;
+    min-height: 100vh;
+}
+
+.page.active {
+    display: block;
+}
+
+/* ========================
+   DECORATIVE ILLUSTRATIONS
+   ======================== */
+.deco-left,
+.deco-right {
+    position: fixed;
+    bottom: 0;
+    width: 180px;
+    height: 80vh;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.7;
+}
+
+.deco-left {
+    left: 0;
+}
+
+.deco-right {
+    right: 0;
+}
+
+.deco-left svg,
+.deco-right svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ========================
+   SEARCH HERO (Landing)
+   ======================== */
+.search-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 40px;
+    transition: padding 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.search-hero.collapsed {
+    padding: 72px 24px 20px;
+}
+
+/* ========================
+   ANIMATED SNOO LOGO
+   ======================== */
+.snoo-container {
+    margin-bottom: 20px;
+    transition: all 0.4s ease;
+}
+
+.search-hero.collapsed .snoo-container {
+    height: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.snoo-logo {
+    width: 120px;
+    height: 140px;
+    filter: drop-shadow(0 6px 20px rgba(255, 69, 0, 0.20));
+}
+
+/* Idle bobbing */
+.snoo-logo {
+    animation: snoo-bob 3s ease-in-out infinite;
+}
+
+@keyframes snoo-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Eye blink */
+.snoo-eye-left,
+.snoo-eye-right {
+    animation: snoo-blink 4s ease-in-out infinite;
+}
+
+@keyframes snoo-blink {
+    0%, 42%, 46%, 100% { transform: scaleY(1); }
+    44% { transform: scaleY(0.1); }
+}
+
+.snoo-eye-left { transform-origin: 50px 52px; }
+.snoo-eye-right { transform-origin: 70px 52px; }
+.snoo-pupil-left { animation: snoo-blink 4s ease-in-out infinite; transform-origin: 51px 51px; }
+.snoo-pupil-right { animation: snoo-blink 4s ease-in-out infinite; transform-origin: 71px 51px; }
+
+/* Arm wave */
+.snoo-arm-right {
+    animation: snoo-wave 2.5s ease-in-out infinite;
+    transform-origin: 80px 88px;
+}
+
+@keyframes snoo-wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-8deg); }
+}
+
+/* Antenna glow pulse */
+.snoo-antenna-ball {
+    animation: snoo-antenna-glow 2s ease-in-out infinite;
+}
+
+@keyframes snoo-antenna-glow {
+    0%, 100% { stroke: #FF4500; filter: none; }
+    50% { stroke: #ff6a33; filter: drop-shadow(0 0 6px rgba(255,69,0,0.5)); }
+}
+
+/* ========================
+   HERO TEXT
+   ======================== */
+.hero-title {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+    transition: all 0.4s ease;
+}
+
+.title-accent {
+    color: var(--accent);
+}
+
+.search-hero.collapsed .hero-title {
+    font-size: 0;
+    margin: 0;
+    opacity: 0;
+    height: 0;
+}
+
+.hero-subtitle {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 36px;
+    font-weight: 400;
+    transition: all 0.4s ease;
+}
+
+.search-hero.collapsed .hero-subtitle {
+    font-size: 0;
+    margin: 0;
+    opacity: 0;
+    height: 0;
+}
+
+/* ========================
+   SEARCH BOX
+   ======================== */
+.search-container {
+    width: 100%;
+    max-width: 660px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 6px 6px 6px 20px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-search);
+}
+
+.search-box:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 4px 28px rgba(123, 140, 196, 0.18);
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 16px;
+    padding: 12px 14px;
+    font-family: var(--font);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-filters {
+    flex-shrink: 0;
+}
+
+.subreddit-select {
+    appearance: none;
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 30px 8px 14px;
+    font-size: 13px;
+    font-family: var(--font);
+    cursor: pointer;
+    outline: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ba3be' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: var(--transition);
+}
+
+.subreddit-select:hover,
+.subreddit-select:focus {
+    border-color: var(--border-focus);
+    color: var(--text-primary);
+}
+
+/* ========================
+   AUTOCOMPLETE DROPDOWN
+   ======================== */
+.autocomplete-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    display: none;
+    overflow: hidden;
+    z-index: 50;
+}
+
+.autocomplete-dropdown.visible {
+    display: block;
+}
+
+.ac-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(200, 210, 230, 0.3);
+}
+
+.ac-item:last-child {
+    border-bottom: none;
+}
+
+.ac-item:hover,
+.ac-item.selected {
+    background: var(--bg-hover);
+}
+
+.ac-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.ac-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.ac-score {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-hover);
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+/* ========================
+   RESULTS
+   ======================== */
+.results-area {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+}
+
+.results-header {
+    padding: 8px 0 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    transition: var(--transition);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+}
+
+.result-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px var(--accent-glow);
+    transform: translateY(-2px);
+}
+
+.result-subreddit {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--reddit-orange);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.result-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--accent-hover);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.result-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.result-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.result-score-badge {
+    background: var(--accent-glow);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.results-pagination {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.btn-load-more {
+    background: var(--bg-card);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 24px;
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.btn-load-more:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ========================
+   NO RESULTS
+   ======================== */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.no-results-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-results h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+/* ========================
+   LOADING
+   ======================== */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================
+   CRAWL PAGE
+   ======================== */
+.crawl-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.crawl-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.card-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+}
+
+.card-desc {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.crawl-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.prefixed-input {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.prefixed-input:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.input-prefix {
+    padding: 12px 0 12px 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 15px;
+    user-select: none;
+}
+
+.crawl-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: var(--font);
+    outline: none;
+    transition: var(--transition);
+}
+
+.crawl-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.prefixed-input .crawl-input {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.crawl-input.small {
+    max-width: 100px;
+}
+
+.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(123, 140, 196, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(123, 140, 196, 0.3);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ========================
+   PIPELINE PROGRESS
+   ======================== */
+.pipeline-progress {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.progress-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.progress-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.stage {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    position: relative;
+}
+
+.stage:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 34px;
+    bottom: -2px;
+    width: 2px;
+    background: var(--border);
+}
+
+.stage.active:not(:last-child)::after {
+    background: var(--accent);
+}
+
+.stage.done:not(:last-child)::after {
+    background: var(--green);
+}
+
+.stage-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg-primary);
+    flex-shrink: 0;
+    transition: var(--transition);
+    position: relative;
+}
+
+.stage.active .stage-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.stage.done .stage-dot {
+    border-color: var(--green);
+    background: var(--green);
+}
+
+.stage.done .stage-dot::after {
+    content: '\2713';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.stage.error .stage-dot {
+    border-color: var(--red);
+    background: var(--red);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(123, 140, 196, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(123, 140, 196, 0); }
+}
+
+.stage-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stage-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.stage-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.progress-result {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(92, 184, 92, 0.08);
+    border: 1px solid rgba(92, 184, 92, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--green);
+    display: none;
+}
+
+.progress-result.visible {
+    display: block;
+}
+
+.progress-result.error {
+    background: rgba(231, 76, 60, 0.06);
+    border-color: rgba(231, 76, 60, 0.2);
+    color: var(--red);
+}
+
+/* ========================
+   DASHBOARD
+   ======================== */
+.stats-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    color: var(--text-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subreddit-list-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.subreddit-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.subreddit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.subreddit-chip:hover {
+    border-color: var(--reddit-orange);
+    color: var(--reddit-orange);
+    transform: translateY(-1px);
+}
+
+.subreddit-chip .chip-prefix {
+    color: var(--reddit-orange);
+    font-weight: 600;
+}
+
+/* ========================
+   RESPONSIVE
+   ======================== */
+@media (max-width: 768px) {
+    .deco-left,
+    .deco-right {
+        width: 100px;
+        opacity: 0.4;
+    }
+}
+
+@media (max-width: 640px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
+    .deco-left,
+    .deco-right {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .snoo-logo {
+        width: 90px;
+        height: 105px;
+    }
+
+    .search-box {
+        flex-wrap: wrap;
+        border-radius: var(--radius);
+        padding: 8px;
+    }
+
+    .search-input {
+        width: 100%;
+        order: 1;
+    }
+
+    .search-icon {
+        order: 0;
+    }
+
+    .search-filters {
+        order: 2;
+        width: auto;
+    }
+
+    .result-meta {
+        flex-wrap: wrap;
+    }
+
+    .crawl-card {
+        padding: 24px;
+    }
+}

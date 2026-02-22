@@ -41,7 +41,7 @@ def main() -> int:
 
     for summary in summaries:
         print(
-            "subreddit={subreddit} shard={shard_id} version={version} docs={doc_count}".format(
+            "shard={shard_id} version={version} docs={doc_count}".format(
                 **summary
             )
         )

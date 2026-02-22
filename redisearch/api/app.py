@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from redisearch.api.rate_limiter import RateLimiter
 from redisearch.api.routes.admin import router as admin_router
 from redisearch.api.routes.autocomplete import router as autocomplete_router
 from redisearch.api.routes.health import router as health_router
+from redisearch.api.routes.pipeline import router as pipeline_router
 from redisearch.api.routes.search import router as search_router
 from redisearch.autocomplete.suggester import PrefixSuggester
 from redisearch.config.settings import Settings, get_settings
@@ -18,6 +23,9 @@ from redisearch.storage.job_store import JobStore
 from redisearch.storage.processed_store import ProcessedPostStore
 from redisearch.storage.raw_store import RawPostStore
 from redisearch.storage.schema import initialize_database
+
+# Resolve frontend directory (project_root / frontend)
+_FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -81,5 +89,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(search_router)
     app.include_router(autocomplete_router)
     app.include_router(admin_router)
+    app.include_router(pipeline_router)
+
+    # Serve frontend static files (CSS, JS)
+    static_dir = _FRONTEND_DIR / "static"
+    if static_dir.is_dir():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+    # Serve index.html at root
+    @app.get("/", include_in_schema=False)
+    async def _serve_frontend():
+        index_file = _FRONTEND_DIR / "index.html"
+        if index_file.is_file():
+            return FileResponse(str(index_file), media_type="text/html")
+        return {"detail": "Frontend not found"}
 
     return app

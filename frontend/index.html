@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RediSearch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand" onclick="showPage('search')">
+                <!-- Small Snoo icon -->
+                <svg class="nav-snoo" viewBox="0 0 40 40" width="30" height="30">
+                    <circle cx="20" cy="20" r="18" fill="#FF4500"/>
+                    <ellipse cx="20" cy="24" rx="12" ry="9" fill="#fff"/>
+                    <circle cx="15" cy="22" r="3" fill="#FF4500"/>
+                    <circle cx="25" cy="22" r="3" fill="#FF4500"/>
+                    <circle cx="15" cy="21.5" r="1.2" fill="#fff"/>
+                    <circle cx="25" cy="21.5" r="1.2" fill="#fff"/>
+                    <ellipse cx="20" cy="27" rx="3" ry="1.5" fill="none" stroke="#FF4500" stroke-width="0.8"/>
+                    <line x1="20" y1="6" x2="26" y2="3" stroke="#FF4500" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="27" cy="3" r="2.5" fill="none" stroke="#FF4500" stroke-width="1.5"/>
+                    <rect x="17" y="10" width="6" height="6" rx="2" fill="#FF4500"/>
+                </svg>
+                <span class="logo-text">Redi<span class="logo-accent">Search</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="search" onclick="showPage('search')">Search</a>
+                <a href="#" class="nav-link" data-page="crawl" onclick="showPage('crawl')">Crawl</a>
+                <a href="#" class="nav-link" data-page="stats" onclick="showPage('stats')">Dashboard</a>
+            </div>
+        </nav>
+
+        <!-- ========== SEARCH PAGE (Landing) ========== -->
+        <div id="page-search" class="page active">
+            <!-- Decorative illustrations -->
+            <div class="deco-left">
+                <svg viewBox="0 0 220 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Fern leaves -->
+                    <path d="M110 580 Q90 500 70 440 Q50 380 80 320 Q55 260 85 200 Q65 140 95 80" stroke="#b8c6e2" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <ellipse cx="60" cy="430" rx="28" ry="14" fill="#cdd5ed" opacity="0.6" transform="rotate(-20 60 430)"/>
+                    <ellipse cx="72" cy="360" rx="22" ry="11" fill="#c3cde8" opacity="0.55" transform="rotate(15 72 360)"/>
+                    <ellipse cx="55" cy="290" rx="24" ry="12" fill="#cdd5ed" opacity="0.5" transform="rotate(-25 55 290)"/>
+                    <ellipse cx="78" cy="220" rx="20" ry="10" fill="#c3cde8" opacity="0.45" transform="rotate(10 78 220)"/>
+                    <ellipse cx="60" cy="150" rx="22" ry="11" fill="#cdd5ed" opacity="0.4" transform="rotate(-18 60 150)"/>
+                    <!-- Blob -->
+                    <path d="M30 600 Q-10 480 40 400 Q90 340 30 280 Q-10 220 50 180 Q20 130 50 100 L0 100 L0 600 Z" fill="#dfe4f4" opacity="0.55"/>
+                </svg>
+            </div>
+            <div class="deco-right">
+                <svg viewBox="0 0 220 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Tree branches -->
+                    <path d="M110 580 Q130 470 150 400 Q170 330 140 260 Q160 190 130 120" stroke="#b0bfdc" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                    <path d="M150 400 Q180 360 190 310" stroke="#b8c6e0" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M140 260 Q170 235 180 200" stroke="#b8c6e0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M130 120 Q150 95 165 100" stroke="#b8c6e0" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <!-- Leaf blobs on branches -->
+                    <ellipse cx="192" cy="305" rx="12" ry="18" fill="#c5d0ea" opacity="0.5" transform="rotate(20 192 305)"/>
+                    <ellipse cx="182" cy="195" rx="10" ry="16" fill="#c5d0ea" opacity="0.45" transform="rotate(-15 182 195)"/>
+                    <ellipse cx="168" cy="95" rx="10" ry="14" fill="#c5d0ea" opacity="0.4" transform="rotate(8 168 95)"/>
+                    <!-- Blob -->
+                    <path d="M220 600 Q180 480 200 400 Q220 330 180 260 Q220 190 190 140 L220 140 L220 600 Z" fill="#d6ddf0" opacity="0.45"/>
+                </svg>
+            </div>
+
+            <div class="search-hero" id="search-hero">
+                <!-- Animated Reddit Snoo Robot -->
+                <div class="snoo-container" id="snoo-container">
+                    <svg class="snoo-logo" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Antenna -->
+                        <line class="snoo-antenna" x1="60" y1="30" x2="78" y2="8" stroke="#FF4500" stroke-width="3" stroke-linecap="round"/>
+                        <circle class="snoo-antenna-ball" cx="80" cy="6" r="5" fill="none" stroke="#FF4500" stroke-width="2.5"/>
+                        <!-- Ears -->
+                        <circle class="snoo-ear snoo-ear-left" cx="30" cy="42" r="8" fill="#FF4500"/>
+                        <circle class="snoo-ear snoo-ear-right" cx="90" cy="42" r="8" fill="#FF4500"/>
+                        <!-- Head -->
+                        <ellipse class="snoo-head" cx="60" cy="52" rx="32" ry="28" fill="#FF4500"/>
+                        <!-- Face -->
+                        <ellipse class="snoo-face" cx="60" cy="56" rx="24" ry="18" fill="#fff"/>
+                        <!-- Eyes -->
+                        <circle class="snoo-eye snoo-eye-left" cx="50" cy="52" r="5" fill="#FF4500"/>
+                        <circle class="snoo-eye snoo-eye-right" cx="70" cy="52" r="5" fill="#FF4500"/>
+                        <circle class="snoo-pupil snoo-pupil-left" cx="51" cy="51" r="2" fill="#fff"/>
+                        <circle class="snoo-pupil snoo-pupil-right" cx="71" cy="51" r="2" fill="#fff"/>
+                        <!-- Mouth -->
+                        <path class="snoo-mouth" d="M52 63 Q60 69 68 63" fill="none" stroke="#FF4500" stroke-width="1.8" stroke-linecap="round"/>
+                        <!-- Body -->
+                        <rect class="snoo-body" x="40" y="80" width="40" height="30" rx="12" fill="#FF4500"/>
+                        <!-- Arms -->
+                        <path class="snoo-arm snoo-arm-left" d="M40 88 Q25 85 18 98" stroke="#FF4500" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <path class="snoo-arm snoo-arm-right" d="M80 88 Q95 85 102 98" stroke="#FF4500" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <!-- Legs -->
+                        <path class="snoo-leg snoo-leg-left" d="M48 110 L44 128" stroke="#FF4500" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <path class="snoo-leg snoo-leg-right" d="M72 110 L76 128" stroke="#FF4500" stroke-width="6" fill="none" stroke-linecap="round"/>
+                        <!-- Feet -->
+                        <ellipse class="snoo-foot snoo-foot-left" cx="42" cy="131" rx="8" ry="4" fill="#FF4500"/>
+                        <ellipse class="snoo-foot snoo-foot-right" cx="78" cy="131" rx="8" ry="4" fill="#FF4500"/>
+                    </svg>
+                </div>
+
+                <h1 class="hero-title">Redi<span class="title-accent">Search</span></h1>
+                <p class="hero-subtitle">BM25 search engine for Reddit posts</p>
+
+                <div class="search-container">
+                    <div class="search-box" id="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            class="search-input" 
+                            placeholder="Search" 
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <div class="search-filters">
+                            <select id="subreddit-filter" class="subreddit-select">
+                                <option value="">All subreddits</option>
+                            </select>
+                        </div>
+                        <!-- Autocomplete dropdown -->
+                        <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-area" id="results-area">
+                <div class="results-header" id="results-header"></div>
+                <div class="results-list" id="results-list"></div>
+                <div class="results-pagination" id="results-pagination"></div>
+            </div>
+        </div>
+
+        <!-- ========== CRAWL PAGE ========== -->
+        <div id="page-crawl" class="page">
+            <div class="crawl-container">
+                <div class="crawl-card">
+                    <h2 class="card-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        Crawl a Subreddit
+                    </h2>
+                    <p class="card-desc">Enter a subreddit name to crawl posts from Reddit. The system will fetch posts, preprocess them, and build a searchable index.</p>
+                    
+                    <div class="crawl-form">
+                        <div class="input-group">
+                            <label for="crawl-subreddit">Subreddit</label>
+                            <div class="prefixed-input">
+                                <span class="input-prefix">r/</span>
+                                <input type="text" id="crawl-subreddit" placeholder="python" class="crawl-input">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="crawl-pages">Pages to crawl</label>
+                            <input type="number" id="crawl-pages" value="2" min="1" max="20" class="crawl-input small">
+                        </div>
+                        <button class="btn-primary" id="crawl-btn" onclick="startCrawl()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                                <path d="M5 12h14"></path>
+                                <path d="m12 5 7 7-7 7"></path>
+                            </svg>
+                            Start Pipeline
+                        </button>
+                    </div>
+
+                    <!-- Pipeline progress -->
+                    <div class="pipeline-progress" id="pipeline-progress" style="display:none;">
+                        <h3 class="progress-title">Pipeline Progress</h3>
+                        <div class="progress-stages">
+                            <div class="stage" id="stage-crawl">
+                                <div class="stage-dot"></div>
+                                <div class="stage-info">
+                                    <span class="stage-name">Crawl</span>
+                                    <span class="stage-detail" id="stage-crawl-detail">Waiting...</span>
+                                </div>
+                            </div>
+                            <div class="stage" id="stage-preprocess">
+                                <div class="stage-dot"></div>
+                                <div class="stage-info">
+                                    <span class="stage-name">Preprocess</span>
+                                    <span class="stage-detail" id="stage-preprocess-detail">Waiting...</span>
+                                </div>
+                            </div>
+                            <div class="stage" id="stage-index">
+                                <div class="stage-dot"></div>
+                                <div class="stage-info">
+                                    <span class="stage-name">Build Index</span>
+                                    <span class="stage-detail" id="stage-index-detail">Waiting...</span>
+                                </div>
+                            </div>
+                            <div class="stage" id="stage-autocomplete">
+                                <div class="stage-dot"></div>
+                                <div class="stage-info">
+                                    <span class="stage-name">Autocomplete</span>
+                                    <span class="stage-detail" id="stage-autocomplete-detail">Waiting...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-result" id="pipeline-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== DASHBOARD PAGE ========== -->
+        <div id="page-stats" class="page">
+            <div class="stats-container">
+                <h2 class="page-title">System Dashboard</h2>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-posts">-</div>
+                        <div class="stat-label">Raw Posts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-processed">-</div>
+                        <div class="stat-label">Processed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-indexes">-</div>
+                        <div class="stat-label">Active Indexes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-subreddits">-</div>
+                        <div class="stat-label">Subreddits</div>
+                    </div>
+                </div>
+                <div class="subreddit-list-section">
+                    <h3>Indexed Subreddits</h3>
+                    <div class="subreddit-chips" id="subreddit-chips"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
