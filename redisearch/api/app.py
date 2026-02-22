@@ -5,13 +5,16 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from redisearch.api.rate_limiter import RateLimiter
+from redisearch.api.routes.admin import router as admin_router
 from redisearch.api.routes.autocomplete import router as autocomplete_router
 from redisearch.api.routes.health import router as health_router
 from redisearch.api.routes.search import router as search_router
 from redisearch.autocomplete.suggester import PrefixSuggester
 from redisearch.config.settings import Settings, get_settings
+from redisearch.jobs.scheduler import Scheduler
 from redisearch.search.bm25_searcher import BM25Searcher
 from redisearch.storage.index_version_store import IndexVersionStore
+from redisearch.storage.job_store import JobStore
 from redisearch.storage.processed_store import ProcessedPostStore
 from redisearch.storage.raw_store import RawPostStore
 from redisearch.storage.schema import initialize_database
@@ -61,10 +64,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         refill_rate=rl.autocomplete_refill_rate,
         eviction_ttl=rl.eviction_ttl,
     )
+    app.state.admin_rate_limiter = RateLimiter(
+        capacity=rl.admin_bucket_capacity,
+        refill_rate=rl.admin_refill_rate,
+        eviction_ttl=rl.eviction_ttl,
+    )
+
+    # Background jobs
+    app.state.scheduler = Scheduler(
+        job_store=JobStore(settings.db_path),
+        settings=settings.jobs,
+    )
 
     # Mount routes
     app.include_router(health_router)
     app.include_router(search_router)
     app.include_router(autocomplete_router)
+    app.include_router(admin_router)
 
     return app

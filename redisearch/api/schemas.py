@@ -53,6 +53,44 @@ class AutocompleteResponse(BaseModel):
     suggestions: list[SuggestionResponse]
 
 
+class JobEnqueueRequest(BaseModel):
+    """Request body for enqueuing a job."""
+
+    job_type: str
+    payload: Optional[dict] = None
+    priority: int = 10
+
+
+class JobEnqueueResponse(BaseModel):
+    """Response after enqueuing a job."""
+
+    job_id: int
+    status: str
+
+
+class JobResponse(BaseModel):
+    """A single job record."""
+
+    id: int
+    job_type: str
+    status: str
+    payload: str
+    priority: int
+    created_at: str
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    error: Optional[str] = None
+    retries: int = 0
+
+
+class JobListResponse(BaseModel):
+    """List of jobs."""
+
+    jobs: list[JobResponse]
+    total: int
+    note: Optional[str] = None
+
+
 class ErrorResponse(BaseModel):
     """Standard error envelope."""
 
