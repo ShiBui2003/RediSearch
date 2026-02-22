@@ -28,6 +28,7 @@ class SearchResponse(BaseModel):
     total_hits: int
     page_size: int
     next_cursor: Optional[str] = None
+    query_time_ms: Optional[float] = None
 
 
 class StatsResponse(BaseModel):

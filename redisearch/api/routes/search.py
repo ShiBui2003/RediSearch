@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import time
+
 from fastapi import APIRouter, HTTPException, Query, Request
 
 from redisearch.api.pagination import Page, decode_cursor
@@ -24,6 +26,8 @@ def search(
 
     if not rate_limiter.is_allowed(client_ip):
         raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    t_start = time.perf_counter()
 
     searcher = request.app.state.searcher
     raw_store = request.app.state.raw_store
@@ -54,10 +58,13 @@ def search(
             )
         )
 
+    query_time_ms = round((time.perf_counter() - t_start) * 1000, 2)
+
     return SearchResponse(
         query=q,
         hits=response_hits,
         total_hits=page.total_hits,
         page_size=page.page_size,
         next_cursor=page.next_cursor,
+        query_time_ms=query_time_ms,
     )
