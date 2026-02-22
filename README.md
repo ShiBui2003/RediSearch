@@ -81,7 +81,7 @@ The critical invariant: **raw data is never modified after insertion**. All down
 - [x] **Phase 4 — BM25 Search**: inverted index, BM25 builder/searcher, search CLI
 - [x] **Phase 5 — API**: FastAPI endpoints, rate limiting, cursor pagination
 - [x] **Phase 6 — Sharding**: shard manager, router, cross-shard merge
-- [ ] **Phase 7 — TF-IDF + Vector + Hybrid**: embeddings, FAISS, score fusion
+- [x] **Phase 7 — TF-IDF + Vector + Hybrid**: TF-IDF index, FAISS vector index, score fusion
 - [ ] **Phase 8 — Autocomplete**: trie, builder, prefix suggester
 - [ ] **Phase 9 — Background Jobs**: job queue workers, scheduler, index versioning
 
