@@ -16,7 +16,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from redisearch.autocomplete.builder import AutocompleteBuilder
-from redisearch.crawler.crawler import SubredditCrawler
+from redisearch.crawler.json_crawler import RedditJsonCrawler
 from redisearch.indexing.bm25_builder import BM25IndexBuilder
 from redisearch.preprocessing.service import PreprocessingService
 
@@ -60,7 +60,7 @@ def _run_pipeline(subreddit: str, max_pages: int, db_path, settings) -> None:
 
         from redisearch.storage.raw_store import RawPostStore
         raw_store = RawPostStore(db_path)
-        crawler = SubredditCrawler(raw_store=raw_store)
+        crawler = RedditJsonCrawler(raw_store=raw_store)
         crawl_result = crawler.crawl_subreddit(sub, max_pages=max_pages)
 
         with _pipeline_lock:
