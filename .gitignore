@@ -1,0 +1,42 @@
+# Data
+data/
+*.db
+*.db-wal
+*.db-shm
+
+# Indexes
+*.index
+*.npy
+*.npz
+*.msgpack
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Model cache
+models/

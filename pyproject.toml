@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "redisearch"
+version = "0.1.0"
+description = "A BM25 and WebCrawler based Search Engine for Reddit"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "nltk>=3.8.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
+    "sentence-transformers>=2.2.0",
+    "faiss-cpu>=1.7.4",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+    "pydantic>=2.5.0",
+    "msgpack>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "httpx>=0.25.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["redisearch*"]
