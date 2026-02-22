@@ -11,7 +11,6 @@ All methods accept an optional db_path for testability.
 from __future__ import annotations
 
 import logging
-from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
 

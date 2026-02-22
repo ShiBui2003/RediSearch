@@ -2,12 +2,10 @@
 Central configuration for the entire RediSearch system.
 
 All tunables live here. Nothing is hardcoded in module code.
-Values can be overridden via environment variables prefixed with REDISEARCH_.
 """
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from functools import lru_cache

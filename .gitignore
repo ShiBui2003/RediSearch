@@ -1,5 +1,8 @@
-# Data
+# Data (keep directory structure via .gitkeep)
 data/
+!data/db/.gitkeep
+!data/indexes/.gitkeep
+!data/logs/.gitkeep
 *.db
 *.db-wal
 *.db-shm

@@ -78,8 +78,8 @@ The critical invariant: **raw data is never modified after insertion**. All down
 - [x] **Phase 1 — Foundation**: project scaffolding, config, SQLite schema, storage CRUD, tests
 - [x] **Phase 2 — Crawler**: HTTP client, robots.txt, listing/post parsing, dedup, CLI
 - [x] **Phase 3 — Preprocessing**: 9-step pipeline, profiles (DOCUMENT/QUERY/AUTOCOMPLETE), CLI
-- [ ] **Phase 4 — BM25 Search**: inverted index, BM25 builder/searcher, search CLI
-- [ ] **Phase 5 — API**: FastAPI endpoints, rate limiting, cursor pagination
+- [x] **Phase 4 — BM25 Search**: inverted index, BM25 builder/searcher, search CLI
+- [x] **Phase 5 — API**: FastAPI endpoints, rate limiting, cursor pagination
 - [ ] **Phase 6 — Sharding**: shard manager, router, cross-shard merge
 - [ ] **Phase 7 — TF-IDF + Vector + Hybrid**: embeddings, FAISS, score fusion
 - [ ] **Phase 8 — Autocomplete**: trie, builder, prefix suggester
@@ -96,3 +96,30 @@ python -m redisearch.crawler.cli --subreddit python --max-pages 2
 ```bash
 python -m redisearch.preprocessing.cli --limit 1000
 ```
+
+### Build BM25 index
+
+```bash
+python -m redisearch.indexing.cli --subreddit python
+```
+
+### Search
+
+```bash
+python -m redisearch.search.cli --query "python decorators" --subreddit python
+```
+
+### Start API server
+
+```bash
+python -m redisearch.api.server               # http://127.0.0.1:8000
+python -m redisearch.api.server --port 9000    # custom port
+```
+
+Endpoints:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Liveness check |
+| GET | `/stats` | Raw/processed counts, subreddit list |
+| GET | `/search?q=...&subreddit=...&page_size=20&cursor=...` | BM25 search with pagination |

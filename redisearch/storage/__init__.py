@@ -1,5 +1,7 @@
+"""SQLite-backed storage layer for posts, indexes, and jobs."""
+
 from redisearch.storage.models import RawPost, ProcessedPost, IndexVersion, Job
-from redisearch.storage.connection import get_connection, close_connection
+from redisearch.storage.connection import get_connection, close_connection, close_all_connections
 from redisearch.storage.schema import initialize_database
 from redisearch.storage.raw_store import RawPostStore
 from redisearch.storage.processed_store import ProcessedPostStore
@@ -13,6 +15,7 @@ __all__ = [
     "Job",
     "get_connection",
     "close_connection",
+    "close_all_connections",
     "initialize_database",
     "RawPostStore",
     "ProcessedPostStore",

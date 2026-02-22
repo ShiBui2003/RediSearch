@@ -1,0 +1,1 @@
+"""API route sub-package — search and health endpoints."""
