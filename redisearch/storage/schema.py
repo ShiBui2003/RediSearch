@@ -6,10 +6,11 @@ All table creation lives here. The schema is versioned via a
 breaking existing databases.
 
 Tables:
-    raw_posts        — crawled posts (source of truth)
-    processed_posts  — preprocessed tokens (derived, rebuildable)
-    index_versions   — index file metadata and status tracking
-    jobs             — background job queue
+    raw_posts           — crawled posts (source of truth)
+    processed_posts     — preprocessed tokens (derived, rebuildable)
+    index_versions      — index file metadata and status tracking
+    jobs                — background job queue
+    shard_assignments   — subreddit → shard mapping
 """
 
 from __future__ import annotations
@@ -110,6 +111,17 @@ _JOBS_INDEXES = [
     "CREATE INDEX IF NOT EXISTS idx_jobs_type ON jobs(job_type);",
 ]
 
+_SHARD_ASSIGNMENTS_DDL = """
+CREATE TABLE IF NOT EXISTS shard_assignments (
+    subreddit   TEXT PRIMARY KEY,
+    shard_id    TEXT NOT NULL
+);
+"""
+
+_SHARD_ASSIGNMENTS_INDEXES = [
+    "CREATE INDEX IF NOT EXISTS idx_shard_assignments_shard ON shard_assignments(shard_id);",
+]
+
 
 # ---------------------------------------------------------------------------
 # Initialization
@@ -135,6 +147,7 @@ def initialize_database(db_path: Optional[Path] = None) -> None:
         conn.execute(_PROCESSED_POSTS_DDL)
         conn.execute(_INDEX_VERSIONS_DDL)
         conn.execute(_JOBS_DDL)
+        conn.execute(_SHARD_ASSIGNMENTS_DDL)
 
         # Create indexes
         all_indexes = (
@@ -142,6 +155,7 @@ def initialize_database(db_path: Optional[Path] = None) -> None:
             + _PROCESSED_POSTS_INDEXES
             + _INDEX_VERSIONS_INDEXES
             + _JOBS_INDEXES
+            + _SHARD_ASSIGNMENTS_INDEXES
         )
         for idx_sql in all_indexes:
             conn.execute(idx_sql)

@@ -4,6 +4,7 @@ import json
 
 from tests.conftest import make_raw_post, make_processed_post
 from redisearch.indexing.bm25_builder import BM25IndexBuilder
+from redisearch.indexing.shard_manager import ShardManager
 
 
 def test_build_subreddit_creates_active_index(
@@ -23,11 +24,12 @@ def test_build_subreddit_creates_active_index(
         processed_store=processed_store,
         raw_store=raw_store,
         version_store=index_version_store,
+        shard_manager=ShardManager(db_path=db_path),
         project_root=tmp_path,
     )
     summary = builder.build_subreddit("python")
 
-    assert summary["subreddit"] == "python"
+    assert summary["shard_id"] == "shard_python"
     assert summary["doc_count"] == 1
     assert summary["version"] == 1
 
@@ -38,13 +40,14 @@ def test_build_subreddit_creates_active_index(
 
 
 def test_build_subreddit_empty_returns_zero(
-    raw_store, processed_store, index_version_store, tmp_path
+    raw_store, processed_store, index_version_store, tmp_path, db_path
 ):
     """Builder should return zero doc_count when no processed posts exist."""
     builder = BM25IndexBuilder(
         processed_store=processed_store,
         raw_store=raw_store,
         version_store=index_version_store,
+        shard_manager=ShardManager(db_path=db_path),
         project_root=tmp_path,
     )
     summary = builder.build_subreddit("empty")
@@ -53,7 +56,7 @@ def test_build_subreddit_empty_returns_zero(
 
 
 def test_build_increments_version(
-    raw_store, processed_store, index_version_store, tmp_path
+    raw_store, processed_store, index_version_store, tmp_path, db_path
 ):
     """Consecutive builds should produce incrementing version numbers."""
     raw_store.insert(make_raw_post(post_id="t3_v001", permalink="/r/python/comments/v001/s/"))
@@ -69,6 +72,7 @@ def test_build_increments_version(
         processed_store=processed_store,
         raw_store=raw_store,
         version_store=index_version_store,
+        shard_manager=ShardManager(db_path=db_path),
         project_root=tmp_path,
     )
     s1 = builder.build_subreddit("python")

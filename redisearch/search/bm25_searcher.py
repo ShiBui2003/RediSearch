@@ -10,6 +10,7 @@ from typing import Optional
 from redisearch.config.settings import BM25Settings, Settings, get_settings
 from redisearch.indexing.bm25_index import BM25InvertedIndex
 from redisearch.preprocessing.pipeline import PreprocessingProfile, TextPreprocessor
+from redisearch.search.shard_router import ShardRouter
 from redisearch.storage.index_version_store import IndexVersionStore
 
 logger = logging.getLogger(__name__)
@@ -33,12 +34,14 @@ class BM25Searcher:
         bm25_settings: Optional[BM25Settings] = None,
         project_root: Optional[Path] = None,
         preprocessor: Optional[TextPreprocessor] = None,
+        shard_router: Optional[ShardRouter] = None,
     ) -> None:
         settings: Settings = get_settings()
         self._version_store = version_store or IndexVersionStore()
         self._bm25_settings = bm25_settings or settings.bm25
         self._project_root = project_root or settings.project_root
         self._preprocessor = preprocessor or TextPreprocessor(settings.preprocessing)
+        self._shard_router = shard_router or ShardRouter(version_store=self._version_store)
         self._cache: dict[str, BM25InvertedIndex] = {}
 
     def search(
@@ -52,9 +55,7 @@ class BM25Searcher:
         if not query_tokens:
             return []
 
-        shards = [f"shard_{subreddit.strip().lower()}"] if subreddit else [
-            v.shard_id for v in self._version_store.get_all_active() if v.index_type == "bm25"
-        ]
+        shards = self._shard_router.resolve(subreddit=subreddit, index_type="bm25")
 
         all_hits: list[BM25SearchHit] = []
         for shard_id in shards:
